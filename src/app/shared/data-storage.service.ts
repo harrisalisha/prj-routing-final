@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 import { RecipeService } from "../recipes/recipe.service";
+import { Recipe } from "../recipes/recipe.model";
 //import { Recipe } from "../recipes/recipe.model";
 
 @Injectable({
@@ -22,10 +23,25 @@ export class DataStorageService {
     .subscribe( response => {
       console.log( response);
     });
-  }// u can do return n subscribe in component, or delete return subscribe() in service
+  }
+
+  fetchrecipes(){
+    this.http.get<Recipe[]>(
+      'https://ngcourse-recipebook-ef7ea.firebaseio.com/recipes.json'
+    )
+    .subscribe(recipes => {
+      //console.log(recipes);
+      this.recipeService.setRecipes(recipes);
+    })
+
+  }
 
 
 }
+
+
 //need to import Httpclientmodule in app module
 //PUT is writing data in Firebase same like post or over writing
 // subcribe() can done in service or component
+// u can do return n subscribe in component, or delete return subscribe() in service
+
