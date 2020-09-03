@@ -34,7 +34,7 @@ export class AuthComponent {
         this.isLoading = false;
       }, errorMessage => {
         console.log(errorMessage);
-        this.error = 'an error is accured!';
+        this.error = 'An error is accured!';
         this.isLoading = false;
       });
     }
