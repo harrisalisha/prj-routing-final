@@ -61,6 +61,29 @@ export class AuthService {
     }));
   }
 
+  autoLogin(){
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } =JSON.parse(localStorage.getItem('userData'));//parse json obj and confort to js obj
+    if(!userData){
+      return;
+    }
+
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+    if(loadedUser.token){
+      this.user.next(loadedUser);//this is login user
+    }
+  }
+
+
   logout(){
     this.user.next(null);
   }
@@ -72,6 +95,7 @@ export class AuthService {
     const user = new User( email, userId, token, expirationDate);
 
     this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));//confort jsobject to string
   }
 
   private handleError(errorRes: HttpErrorResponse){
