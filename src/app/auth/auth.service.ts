@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError, tap } from "rxjs/operators";
@@ -20,8 +21,11 @@ export interface AuthResponseData{
 export class AuthService {
   user = new BehaviorSubject<User>(null);//give immediate access
   token : string = null;
+  private tokenExpirationTimer : any;
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient,
+    private router: Router){}
+
 
   signup(email: string, password: string){
     return this.http.post<AuthResponseData>(
@@ -80,12 +84,28 @@ export class AuthService {
     );
     if(loadedUser.token){
       this.user.next(loadedUser);//this is login user
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogout(expirationDuration);
     }
   }
 
 
   logout(){
     this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem('userData');
+    if( this.tokenExpirationTimer){
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogout(expirationDuration: number){
+    this.tokenExpirationTimer = setTimeout(()=> {
+      this.logout();
+    }, expirationDuration);
   }
 
   private handleAuthentication(email: string , userId: string, token: string, expiresIn: number){
@@ -95,6 +115,7 @@ export class AuthService {
     const user = new User( email, userId, token, expirationDate);
 
     this.user.next(user);
+    this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));//confort jsobject to string
   }
 
@@ -120,3 +141,5 @@ export class AuthService {
 }//return observable
 //tap aloow us to perform operators with out changing the response
 //Subject is .next() is emit data call or create data n log user in
+//session life time before expires,authentication in localStorage in the browser or cookie
+//getTime() to miliseconds
