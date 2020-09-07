@@ -10,3 +10,4 @@ export class PlaceholderDirective {
 
 
 }
+//this is placeholder for view component

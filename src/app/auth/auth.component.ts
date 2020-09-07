@@ -1,9 +1,10 @@
-import { Component, ComponentFactoryResolver } from "@angular/core";
+import { Component, ComponentFactoryResolver, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { AuthService ,  AuthResponseData } from "./auth.service";
 import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { AlertComponent} from '../shared/alert/alert.component';
+import { PlaceholderDirective } from "../shared/placeholder/placeholder.directive";
 
 @Component({
   selector: 'app-auth',
@@ -13,6 +14,7 @@ export class AuthComponent {
   isLoginMode = true;
   error: string = null;
   isLoading = false;
+  @ViewChild(PlaceholderDirective, {static: false}) alertHost : PlaceholderDirective;// we pass type
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -63,6 +65,11 @@ export class AuthComponent {
     //obj that knows how to create component
     const alertCmpFactory =
     this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    const hostViewContainerRef = this.alertHost.viewContainerRef;//obj that allow you to interact w the DOm
+    hostViewContainerRef.clear();
+
+    hostViewContainerRef.createComponent(alertCmpFactory);
+
   }
 
 }
