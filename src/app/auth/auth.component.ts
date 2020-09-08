@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { Component, ComponentFactoryResolver, ViewChild, OnDestroy } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { AuthService ,  AuthResponseData } from "./auth.service";
