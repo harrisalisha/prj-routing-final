@@ -26,15 +26,15 @@ import { RecipeItemComponent } from './recipe-list/recipe-item/recipe-item.compo
     ReactiveFormsModule,
     RecipesRoutingModule
   ],
-  exports: [
-    RecipesComponent,
-    RecipeListComponent,
-    RecipeDetailComponent,
-    RecipeItemComponent,
-    RecipeStartComponent,
-    RecipeEditComponent,
-  ]
-
+  //exports: [
+  //  RecipesComponent,
+  //  RecipeListComponent,
+  //  RecipeDetailComponent,
+  //  RecipeItemComponent,
+  //  RecipeStartComponent,
+  //  RecipeEditComponent,
+  //]
+  // dont need to exports because we only use it in the recipe module. n it still works
 })
 export class RecipesModule {
 
